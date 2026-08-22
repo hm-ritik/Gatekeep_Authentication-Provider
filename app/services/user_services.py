@@ -25,12 +25,13 @@ async def  registring_user(post:Register , db:AsyncSession):
 
 async def logging_in(post:Login , db:AsyncSession):
     existing=await check_email(db ,post.email)
-    if existing:
+    if  existing:
         if not verify_password(post.password , existing.hashed_password):
             raise HTTPException(status_code=400 , detail="Login Failed")
         token=create_access_token({"email":post.email})
         return {"access_toke":token , "token_type":"bearer"}
-    return None
+    raise HTTPException(status_code=404 , detail="Login Failed")
+    
         
 
 
