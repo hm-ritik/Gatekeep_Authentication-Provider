@@ -13,7 +13,7 @@ class Settings(BaseSettings):
     REFRESH_TOKEN_EXPIRE_DAYS: int = 30
     ID_TOKEN_EXPIRE_MINUTES: int = 5  
 
-    APP_NAME: str = "ProAuth"
+    APP_NAME: str = "GateKeep"
     DEBUG: bool = False
 
     model_config = SettingsConfigDict(
