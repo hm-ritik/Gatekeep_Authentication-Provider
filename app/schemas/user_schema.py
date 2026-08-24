@@ -1,4 +1,5 @@
 from pydantic import BaseModel , EmailStr
+from uuid import UUID
 
 """   id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
     email: Mapped[str] = mapped_column(String(255),unique=True,index=True,nullable=False)
@@ -15,7 +16,7 @@ class Register(BaseModel):
     hashed_password:str
 
 class RegisterResponse(BaseModel):
-    id:int
+    id:UUID
     email:EmailStr
     is_active:bool
     email_verified:bool

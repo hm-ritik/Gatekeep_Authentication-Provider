@@ -5,7 +5,7 @@ from app.models.user_model import User
 
 
 
-async def register(db:AsyncSession , post:Register):
+async def register(db:AsyncSession , post:User):
     db.add(post)
     await db.commit()
     await db.refresh(post)

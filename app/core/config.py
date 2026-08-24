@@ -4,6 +4,7 @@ from pydantic_settings import BaseSettings , SettingsConfigDict
 
 class Settings(BaseSettings):
     DATABASE_URL: str
+    
     SECRET_KEY: str=Field(..., min_length=32, description="Secret for sessions/cookies")
     PRIVATE_KEY_PATH: str  =Field(..., description="Path to RSA private key")
     PUBLIC_KEY_PATH: str =Field(..., description="Path to RSA public key")

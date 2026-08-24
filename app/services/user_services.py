@@ -1,4 +1,3 @@
-
 from app.core.security import hash_password , verify_password
 from app.schemas.user_schema import Register , Login
 from sqlalchemy.ext.asyncio import AsyncSession
@@ -20,7 +19,7 @@ async def  registring_user(post:Register , db:AsyncSession):
         hashed_password=secure_password
 
     )
-    result=register(db,user)
+    result=await register(db,user)
     return result
 
 async def logging_in(post:Login , db:AsyncSession):

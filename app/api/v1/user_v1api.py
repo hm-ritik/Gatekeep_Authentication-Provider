@@ -14,7 +14,7 @@ async def register_user(request:Request,post:Register,db:AsyncSession=Depends(ge
     return await registring_user(post,db)
 
 @router.post("/login/")
-@limiter.limit("3/minutes")
+@limiter.limit("10/minutes")
 async def login_user(request:Request,post:Login , db:AsyncSession=Depends(get_db)):
     return await logging_in(post ,db) 
 
