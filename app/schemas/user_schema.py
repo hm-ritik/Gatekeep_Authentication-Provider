@@ -13,7 +13,7 @@ from uuid import UUID
 
 class Register(BaseModel):
     email:EmailStr
-    hashed_password:str
+    password:str
 
 class RegisterResponse(BaseModel):
     id:UUID

@@ -12,8 +12,8 @@ from app.core.dependencies import create_access_token
 async def  registring_user(post:Register , db:AsyncSession):
     mail=await check_email(db,post.email)
     if mail:
-        raise HTTPException(status_code=404 , detail="Email Already Exists ")
-    secure_password=hash_password(post.hashed_password)
+        raise HTTPException(status_code=409 , detail="Email Already Exists ")
+    secure_password=hash_password(post.password)
     user=User(
         email=post.email,
         hashed_password=secure_password
@@ -22,15 +22,22 @@ async def  registring_user(post:Register , db:AsyncSession):
     result=await register(db,user)
     return result
 
-async def logging_in(post:Login , db:AsyncSession):
-    existing=await check_email(db ,post.email)
-    if  existing:
-        if not verify_password(post.password , existing.hashed_password):
-            raise HTTPException(status_code=400 , detail="Login Failed")
-        token=create_access_token({"email":post.email})
-        return {"access_toke":token , "token_type":"bearer"}
-    raise HTTPException(status_code=404 , detail="Login Failed")
-    
+async def logging_in(post: Login, db: AsyncSession):
+    existing = await check_email(db, post.email)
+
+    if not existing:
+        raise HTTPException(status_code=401,detail="Invalid credentials")
+    if not verify_password(post.password, existing.hashed_password):
+        raise HTTPException(status_code=401,detail="Invalid credentials")
+    if not existing.is_active:
+        raise HTTPException(status_code=403,detail="User is inactive")
+    token = await create_access_token(
+        subject=str(existing.id),
+        client_id="test-client",
+        scope=""
+    )
+    return token
+   
         
 
 

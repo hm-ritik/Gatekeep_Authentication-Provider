@@ -1,0 +1,8 @@
+import hashlib
+import secrets
+
+def generate_refresh_token() -> str:
+    return secrets.token_urlsafe(64)
+
+def hash_token(raw_token: str) -> str:
+    return hashlib.sha256(raw_token.encode()).hexdigest()
