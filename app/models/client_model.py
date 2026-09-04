@@ -1,19 +1,29 @@
-import uuid
-from datetime import datetime
-from sqlalchemy import String, Boolean, DateTime
-from sqlalchemy.dialects.postgresql import UUID, ARRAY
-from sqlalchemy.orm import Mapped, mapped_column
-
+from sqlalchemy import Column, Integer, String, Boolean, DateTime, func, ARRAY
+from sqlalchemy.orm import relationship
 from app.core.database import Base
 
 class Client(Base):
     __tablename__ = "clients"
-    id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
-    client_id: Mapped[str] = mapped_column(String(255),unique=True,index=True,nullable=False)
-    client_secret_hash: Mapped[str] = mapped_column(String(255),nullable=False)
-    client_name: Mapped[str] = mapped_column(String(255),nullable=False)
-    redirect_uris: Mapped[list[str]] = mapped_column(ARRAY(String),nullable=False)
-    allowed_scopes: Mapped[list[str]] = mapped_column(ARRAY(String),nullable=False,default=list)
-    allowed_grant_types: Mapped[list[str]] = mapped_column(ARRAY(String),nullable=False,default=list)
-    is_active: Mapped[bool] = mapped_column(Boolean,default=True,nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=datetime.utcnow, nullable=False)
+
+    id = Column(Integer, primary_key=True, index=True)
+    client_id = Column(String(100), unique=True, index=True, nullable=False)
+    client_secret_hash = Column(String(255), nullable=False)
+    client_name = Column(String(100), nullable=False)
+    client_type = Column(String(20), default="confidential") 
+    
+    redirect_uris = Column(ARRAY(String), default=[])
+    allowed_scopes = Column(ARRAY(String), default=["openid", "email", "profile"])
+    allowed_grant_types = Column(ARRAY(String), default=["authorization_code", "refresh_token"])
+    
+    is_active = Column(Boolean, default=True)
+    require_pkce = Column(Boolean, default=True)
+    
+    created_at = Column(DateTime(timezone=True), server_default=func.now())
+    updated_at = Column(DateTime(timezone=True), onupdate=func.now())
+    
+    # Relationships
+    authorization_codes = relationship("AuthorizationCode", back_populates="client")
+    user_roles = relationship("UserRole", back_populates="client")
+
+    def __repr__(self):
+        return f"<Client {self.client_id}>"

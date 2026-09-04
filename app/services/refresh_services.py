@@ -1,5 +1,5 @@
 from sqlalchemy.ext.asyncio import AsyncSession
-from app.models.refresh_tmodel import RefreshToken
+from app.models.token_model import RefreshToken
 from datetime import datetime ,timedelta , timezone
 import uuid
 from app.repositories.refresh_repository import create_refresh_token

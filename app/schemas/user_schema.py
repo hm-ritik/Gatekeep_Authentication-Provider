@@ -1,29 +1,31 @@
-from pydantic import BaseModel , EmailStr
-from uuid import UUID
+from pydantic import BaseModel, EmailStr
+from typing import Optional, List
+from datetime import datetime
 
-"""   id: Mapped[uuid.UUID] = mapped_column(UUID(as_uuid=True),primary_key=True,default=uuid.uuid4)
-    email: Mapped[str] = mapped_column(String(255),unique=True,index=True,nullable=False)
-    hashed_password: Mapped[str|None] = mapped_column(String(255),nullable=True)
-    is_active: Mapped[bool] = mapped_column(Boolean, default=True, nullable=False)
-    email_verified: Mapped[bool] = mapped_column(Boolean,default=False,nullable=False)
-    created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True),default=datetime.utcnow,nullable=False)
-    updated_at: Mapped[datetime] = mapped_column(DateTime(timezone=True),default=datetime.utcnow,onupdate=datetime.utcnow,nullable=False)
-    last_login: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)"""
+class UserResponse(BaseModel):
+    id: int
+    email: str
+    full_name: Optional[str]
+    email_verified: bool
+    twofa_enabled: bool
+    created_at: datetime
+    
+    class Config:
+        from_attributes = True
 
+class UserInfoResponse(BaseModel):
+    sub: str 
+    email: str
+    email_verified: bool
+    name: Optional[str] = None
+    roles: List[str] = []
+    permissions: List[str] = []
 
-class Register(BaseModel):
-    email:EmailStr
-    password:str
+class ChangePasswordRequest(BaseModel):
+    current_password: str
+    new_password: str
 
-class RegisterResponse(BaseModel):
-    id:UUID
-    email:EmailStr
-    is_active:bool
-    email_verified:bool
-
-class Login(BaseModel):
-    email:EmailStr
-    password:str
-
-            
+class ChangeEmailRequest(BaseModel):
+    new_email: EmailStr
+    password: str  
 
