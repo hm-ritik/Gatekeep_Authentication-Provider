@@ -1,18 +1,18 @@
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import Optional, Tuple
-from datetime import datetime
+from datetime import datetime , timedelta
 import uuid
 
-from app.models.user import User
-from app.models.client import Client
-from app.models.token import RefreshToken, AuthorizationCode
+from app.models.user_model import User
+from app.models.client_model import Client
+from app.models.token_model import RefreshToken, AuthorizationCode
 from app.repositories import UserRepository, ClientRepository, TokenRepository
 from app.core.security import (
     hash_password, verify_password, 
     create_access_token, create_refresh_token,
     verify_refresh_token, generate_token_hash
 )
-from app.schemas.auth import LoginResponse, TokenResponse
+from app.schemas.auth_schema import LoginResponse, TokenResponse
 
 class AuthService:
     def __init__(self, db: AsyncSession):
@@ -51,20 +51,14 @@ class AuthService:
         
         if not user.is_active:
             raise ValueError("Account is disabled")
-        
-        # Verify password
         if not verify_password(password, user.hashed_password):
             raise ValueError("Invalid credentials")
-        
-        # Get client
         client = await self.client_repo.get_by_client_id(client_id)
         if not client or not client.is_active:
             raise ValueError("Invalid client")
         
-        # Update last login
+      
         await self.user_repo.update_last_login(user)
-        
-        # Generate tokens
         return await self._generate_tokens(user, client)
 
     async def refresh_tokens(self, refresh_token: str, client_id: Optional[str] = None) -> TokenResponse:
