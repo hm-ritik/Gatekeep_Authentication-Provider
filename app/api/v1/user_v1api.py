@@ -20,9 +20,7 @@ async def login_user(request:Request,post:Login , db:AsyncSession=Depends(get_db
     return await logging_in(post ,db) 
 
 @router.get("/me")
-async def get_me(
-    current_user: User = Depends(get_current_user)
-):
+async def get_me(current_user: User = Depends(get_current_user)):
     return {
         "id": current_user.id,
         "email": current_user.email,
