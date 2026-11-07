@@ -1,29 +1,26 @@
-from fastapi import FastAPI
 from contextlib import asynccontextmanager
-from app.api.v1.user_v1api import router as user_router
-from app.core.database import async_engine,Base
-from app.core.limiter import limiter
-from slowapi import _rate_limit_exceeded_handler 
-from slowapi.errors import RateLimitExceeded
+
+from fastapi import FastAPI
+
+from app.api.v1.tenant_v1api import router as tenant_router
+from app.api.v1.client_v1api import router as client_router
+from app.core.config import settings
+from app.core.database import db
+
 
 @asynccontextmanager
-async def lifespan(app:FastAPI):
-    async with async_engine.begin() as conn:
-     pass
-
-    yield    
+async def lifespan(app: FastAPI):
+    yield
+    await db.dispose()
 
 
-app=FastAPI(title="GateKeep" , lifespan=lifespan)
-app.include_router(user_router , prefix="/user")
+app = FastAPI(title=settings.APP_NAME, lifespan=lifespan)
+app.include_router(tenant_router)
+app.include_router(client_router)
 
-
-#ratelimiting
-app.state.limiter = limiter
-app.add_exception_handler( RateLimitExceeded,_rate_limit_exceeded_handler)
 
 @app.get("/home")
-async def health():
+async def home():
     return{
-        "Message" : "Checking system"
+        "Message" : "Wait Untill I finish this one"
     }

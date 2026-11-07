@@ -6,14 +6,14 @@ from sqlalchemy import select
 
 
 class TenantRepository:
-    async def __init__(self , db:AsyncSession):
+    def __init__(self , db:AsyncSession):
         self.db=db
 
     async def create(self , tenant:TenantCreate):    
         self.db.add(tenant)
         await self.db.flush()
         return tenant
-    async def get_by_id(self , tenant_id:uuid.uuid4):
+    async def get_by_id(self , tenant_id:uuid.UUID):
         result= await self.db.execute(select(Tenant).where(Tenant.id==tenant_id))
         return result.scalar_one_or_none()
     async def get_by_slug(self , slug:str):

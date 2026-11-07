@@ -19,7 +19,7 @@ class TenantCreate(BaseModel):
                 "slug may contain only lowercase letters, digits and single hyphens"
             )
         return value
-        
+         
 class TenantResponse(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 

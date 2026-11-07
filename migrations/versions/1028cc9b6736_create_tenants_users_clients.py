@@ -1,8 +1,8 @@
-"""add new tables
+"""create tenants users clients
 
-Revision ID: 791079faa863
-Revises: 68dab246b932
-Create Date: 2026-11-06 09:52:18.351040
+Revision ID: 1028cc9b6736
+Revises: 
+Create Date: 2026-11-07 09:51:25.656788
 
 """
 from typing import Sequence, Union
@@ -12,8 +12,8 @@ import sqlalchemy as sa
 from sqlalchemy.dialects import postgresql
 
 # revision identifiers, used by Alembic.
-revision: str = '791079faa863'
-down_revision: Union[str, Sequence[str], None] = '68dab246b932'
+revision: str = '1028cc9b6736'
+down_revision: Union[str, Sequence[str], None] = None
 branch_labels: Union[str, Sequence[str], None] = None
 depends_on: Union[str, Sequence[str], None] = None
 
