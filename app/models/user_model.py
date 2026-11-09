@@ -16,7 +16,7 @@ class User(Base):
     email:Mapped[str]=mapped_column(String(256))
     hashed_password:Mapped[str]=mapped_column(String(256))
     is_active: Mapped[bool] = mapped_column(default=True)
-    created_at: Mapped[datetime] = mapped_column(
+    created_at: Mapped[datetime] = mapped_column( 
      DateTime(timezone=True), default=datetime.utcnow())
     updated_at: Mapped[datetime] = mapped_column( DateTime(timezone=True), default=datetime.utcnow, onupdate=datetime.utcnow)
 

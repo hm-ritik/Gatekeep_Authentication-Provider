@@ -39,5 +39,6 @@ async def gettenant_byslug(slug:str , session:AsyncSession=Depends(db.get_sessio
     except TenantNotFoundError:
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND , detail=str(TenantNotFoundError))
 
+
    
     

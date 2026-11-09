@@ -2,17 +2,19 @@ import uuid
 
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.ext.asyncio import AsyncSession
+from app.core.security import password_hasher
 
 from app.core.exception import (
     TenantNotFoundError,
     UserAlreadyExistsError,
     UserNotFoundError,
+    InvalidCrentials
 )
 from app.core.security import password_hasher
 from app.models.user_model import User
 from app.repositories.tenant_repository import TenantRepository
 from app.repositories.user_repository import UserRepository
-from app.schemas.user_schema import Create
+from app.schemas.user_schema import Create , LoginRequest
 
 
 class UserServices:
@@ -54,3 +56,13 @@ class UserServices:
         if user is None:
             raise UserNotFoundError(email)
         return user
+
+    async def login_user(self, data: LoginRequest):
+         tenant = await self.tenants.get_by_id(data.tenant_id)
+         user = None
+         if tenant is not None and tenant.is_active:
+            user = await self.users.get_by_email(data.tenant_id, data.email.strip().lower())
+
+         if (user is None or not user.is_active or not password_hasher.verify_password(data.password, user.hashed_password)):
+               raise InvalidCrentials()
+         return {"message": "Login successful"}

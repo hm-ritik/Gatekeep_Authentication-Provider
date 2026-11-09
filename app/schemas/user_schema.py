@@ -7,7 +7,7 @@ class Create(BaseModel):
       model_config=ConfigDict(str_strip_whitespace=True)
       tenant_id:uuid.UUID
       email:EmailStr
-      hashed_password:str
+      password:str
 
 class UserResponse(BaseModel):
      id:uuid.UUID
@@ -15,6 +15,14 @@ class UserResponse(BaseModel):
      email:EmailStr
      is_active:bool
      created_at:datetime
+
+class LoginRequest(BaseModel):
+      email:EmailStr
+      tenant_id:uuid.UUID
+      password:str
+
+
+
 
 
 

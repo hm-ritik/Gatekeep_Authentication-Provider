@@ -29,3 +29,7 @@ class UserAlreadyExistsError(AppError):
 class UserNotFoundError(AppError):
     def __init__(self, user: str) -> None:
         super().__init__(f"User '{user}' not found")
+
+class InvalidCrentials(AppError):
+    def __init__(self) -> None:
+        super().__init__("Invalid credentials")
