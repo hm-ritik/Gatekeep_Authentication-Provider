@@ -7,8 +7,8 @@ from datetime import datetime
 class CreateClient(BaseModel):
     model_config = ConfigDict(str_strip_whitespace=True)
     tenant_id:uuid.UUID
-    client_id:str
     name:str=Field(min_length=4 , max_length=100)
+    is_confidential:bool
     redirect_uris:list[str]
 
 class ClientResponse(BaseModel):
