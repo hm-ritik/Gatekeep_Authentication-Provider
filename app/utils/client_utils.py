@@ -2,18 +2,12 @@ import hashlib
 import secrets
 import hmac
 
-def generate_refresh_token() -> str:
-    return secrets.token_urlsafe(64)
-
-def hash_token(raw_token: str) -> str:
-    return hashlib.sha256(raw_token.encode()).hexdigest()
-
 
 class ClientHelper:
    
     @staticmethod
-    def generate_clientid(self):
-        return self.secrets.token_urlsafe(16)
+    def generate_clientid():
+        return secrets.token_urlsafe(16)
     @staticmethod
     def generate_client_secret() -> str:
          return secrets.token_urlsafe(32)

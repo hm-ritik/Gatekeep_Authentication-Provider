@@ -18,6 +18,11 @@ class ClientAlreadyExistsError(AppError):
             super().__init__(f"Tenant with slug '{client_id}' already exists")
             self.slug = client_id
 
+class ClientNotFoundError(AppError):
+    def __init__(self, client: str) -> None:
+        super().__init__(f"Client '{client}' not found")
+
+
 
 
 

@@ -5,7 +5,8 @@ from app.core.database import db
 from app.core.exception import ClientAlreadyExistsError
 from app.services.client_services import ClientServices
 import uuid
-
+from app.core.exception import TenantNotFoundError 
+from app.schemas.client_schema import ClientCreatedResponse
 
 
 
@@ -13,14 +14,17 @@ import uuid
 
 router=APIRouter()
 
-@router.post("/client" , response_model=ClientResponse, status_code=201)
-async def create_client(data:CreateClient , session:AsyncSession=Depends(db.get_session)):
-    client=ClientServices(session)
+@router.post("/client", response_model=ClientCreatedResponse, status_code=201)
+async def create_client(data: CreateClient, session: AsyncSession = Depends(db.get_session)):
+    service = ClientServices(session)
     try:
-       return await client.create_client(data)
-    except ClientAlreadyExistsError as exe:
-        raise HTTPException(status_code=status.HTTP_409_CONFLICT , detail=str(exe))
+         created = await service.create_client(data)
+    except TenantNotFoundError as exc:
+         raise HTTPException(status_code=404, detail=str(exc))
 
+    response = ClientCreatedResponse.model_validate(created.client)
+    response.client_secret = created.client_secret
+    return response
 
 @router.get("/getbyid" , response_model=ClientResponse , status_code=200)
 async def get_by_id(id:uuid.UUID , session:AsyncSession=Depends(db.get_session)):
